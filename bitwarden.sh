@@ -37,13 +37,13 @@ else
 fi
 
 SCRIPTS_DIR="$OUTPUT/scripts"
-BITWARDEN_SCRIPT_URL="https://go.btwrdn.co/bw-sh"
-RUN_SCRIPT_URL="https://go.btwrdn.co/bw-sh-run"
+BITWARDEN_SCRIPT_URL="https://func.bitwarden.com/api/dl/?app=self-host&platform=linux"
+RUN_SCRIPT_URL="https://func.bitwarden.com/api/dl/?app=self-host&platform=linux&variant=run"
 
 # Please do not create pull requests modifying the version numbers.
-COREVERSION="1.48.1"
-WEBVERSION="2.28.1"
-KEYCONNECTORVERSION="1.0.1"
+COREVERSION="2023.12.0"
+WEBVERSION="2023.12.0"
+KEYCONNECTORVERSION="2023.12.0"
 
 echo "bitwarden.sh version $COREVERSION"
 docker --version
@@ -72,9 +72,18 @@ function downloadRunFile() {
     then
         mkdir $SCRIPTS_DIR
     fi
-    curl -L -s -o $SCRIPTS_DIR/run.sh $RUN_SCRIPT_URL
-    chmod u+x $SCRIPTS_DIR/run.sh
-    rm -f $SCRIPTS_DIR/install.sh
+    run_file_status_code=$(curl -s -L -w "%{http_code}" -o $SCRIPTS_DIR/run.sh $RUN_SCRIPT_URL)
+    if echo "$run_file_status_code" | grep -q "^20[0-9]"
+    then
+        chmod u+x $SCRIPTS_DIR/run.sh
+        rm -f $SCRIPTS_DIR/install.sh
+    else
+        echo "Unable to download run script from $RUN_SCRIPT_URL. Received status code: $run_file_status_code"
+        echo "http response:"
+        cat $SCRIPTS_DIR/run.sh
+        rm -f $SCRIPTS_DIR/run.sh
+        exit 1
+    fi
 }
 
 function checkOutputDirExists() {

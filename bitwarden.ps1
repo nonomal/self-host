@@ -24,13 +24,13 @@ if ($output -eq "") {
 }
 
 $scriptsDir = "${output}\scripts"
-$bitwardenScriptUrl = "https://go.btwrdn.co/bw-ps"
-$runScriptUrl = "https://go.btwrdn.co/bw-ps-run"
+$bitwardenScriptUrl = "https://func.bitwarden.com/api/dl/?app=self-host&platform=windows"
+$runScriptUrl = "https://func.bitwarden.com/api/dl/?app=self-host&platform=windows&variant=run"
 
 # Please do not create pull requests modifying the version numbers.
-$coreVersion = "1.48.1"
-$webVersion = "2.28.1"
-$keyConnectorVersion = "1.0.1"
+$coreVersion = "2023.12.0"
+$webVersion = "2023.12.0"
+$keyConnectorVersion = "2023.12.0"
 
 # Functions
 
